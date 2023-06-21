@@ -20,8 +20,12 @@ async function run(): Promise<void> {
 
   core.info('Fetching changed files')
   const files = getChangedFiles()
+
   core.info(`Found ${files.size} changed files`)
+  core.info(Array.from(files).join('\n'))
+
   const changes = getWorkspaceChanges(workspaces, files)
+  core.info('Changes:' + Array.from(changes).join('\n'))
   for (const base of [...changes.keys()].sort((a, b) => a.localeCompare(b))) {
     if (changes.get(base)) core.info(`Workspace changed: ${base}`)
   }

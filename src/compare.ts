@@ -48,7 +48,6 @@ export function getChangedFiles(): Set<string> {
     ['diff', '--name-status', '--diff-filter=d', `${base}...HEAD`],
     {stdio: ['ignore', 'pipe', 'inherit'], encoding: 'utf-8', timeout: 5000}
   )
-  core.info(stdout)
 
   const changes = new Set(
     stdout
@@ -56,8 +55,6 @@ export function getChangedFiles(): Set<string> {
       .filter(Boolean)
       .map(change => change.split('\t')[1])
   )
-  core.info(`Found ${stdout.split('\n').length} changed files`)
-  core.info(Array.from(changes).join('\n'))
   return changes
 }
 
