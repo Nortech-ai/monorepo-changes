@@ -17,6 +17,7 @@ async function run(): Promise<void> {
     console.dir(workspaces, {colors: true})
   }
 
+  core.info('Fetching changed files')
   const files = getChangedFiles()
   const changes = getWorkspaceChanges(workspaces, files)
   for (const base of [...changes.keys()].sort((a, b) => a.localeCompare(b))) {
