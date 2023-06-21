@@ -66,10 +66,14 @@ exports.getWorkspaceChanges = getWorkspaceChanges;
 function getChangedFiles() {
     const base = fetchComparisonBase();
     const { stdout } = (0, child_process_1.spawnSync)('git', ['diff', '--name-status', '--diff-filter=d', `${base}...HEAD`], { stdio: ['ignore', 'pipe', 'inherit'], encoding: 'utf-8', timeout: 5000 });
-    return new Set(stdout
+    core.info(stdout);
+    const changes = new Set(stdout
         .split('\n')
         .filter(Boolean)
         .map(change => change.split('\t')[1]));
+    core.info(`Found ${stdout.split('\n').length} changed files`);
+    core.info(Array.from(changes).join('\n'));
+    return changes;
 }
 exports.getChangedFiles = getChangedFiles;
 function fetchComparisonBase() {
@@ -196,12 +200,15 @@ const workspace_1 = __nccwpck_require__(8132);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const now = new Date();
+        core.info(`Detecting workspaces at ${now.toISOString()}`);
         const workspaces = yield (0, workspace_1.detect)();
         if (core.isDebug()) {
             // eslint-disable-next-line no-console
             console.dir(workspaces, { colors: true });
         }
+        core.info('Fetching changed files');
         const files = (0, compare_1.getChangedFiles)();
+        core.info(`Found ${files.size} changed files`);
         const changes = (0, compare_1.getWorkspaceChanges)(workspaces, files);
         for (const base of [...changes.keys()].sort((a, b) => a.localeCompare(b))) {
             if (changes.get(base))
