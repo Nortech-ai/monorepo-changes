@@ -9,7 +9,6 @@ import {
 import {detect} from './workspace'
 
 async function run(): Promise<void> {
-  process.exit(1)
   const now = new Date()
   core.info(`Detecting workspaces at ${now.toISOString()}`)
   const workspaces = await detect()
